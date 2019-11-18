@@ -57,6 +57,40 @@ func tambahBuku() {
 	main()
 }
 
+func prosesCariBuku(key string) int {
+	var index int
+	index = -1
+	for i := 0; i < len(dataBuku); i++ {
+		if dataBuku[i].ID == key {
+			index = i
+		}
+	}
+	return index
+}
+
+func cariBuku() {
+	var (
+		ID string
+	)
+
+	fmt.Print("Masukkan ID Buku : ")
+	fmt.Scanln(&ID)
+
+	index := prosesCariBuku(ID)
+	if index != -1 {
+		fmt.Println("\nData Ditemukan :)")
+		fmt.Println("ID :", dataBuku[index].ID)
+		fmt.Println("Nama :", dataBuku[index].Judul)
+		fmt.Println("Penerbit :", dataBuku[index].Penerbit)
+		fmt.Println("Stok :", dataBuku[index].Stok)
+		fmt.Println("Tahun :", dataBuku[index].Tahun)
+	} else {
+		fmt.Println("Data Tidak Ditemukan :(")
+	}
+
+	main()
+}
+
 func main() {
 
 	fmt.Println(dataBuku)
@@ -73,7 +107,7 @@ func main() {
 	if Menu == 1 {
 		tambahBuku()
 	} else if Menu == 2 {
-
+		cariBuku()
 	} else if Menu == 3 {
 
 	} else if Menu == 4 {

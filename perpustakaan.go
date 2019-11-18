@@ -8,15 +8,15 @@ var (
 )
 
 type Buku struct {
-	ID, Judul, Penerbit, Tahun string
-	Stok                       int
+	ID, Judul, Penerbit string
+	Stok, Tahun         int
 }
 
 func tambahBuku() {
 	var (
-		Selesai                               bool
-		inputLagi, ID, Judul, Penerbit, Tahun string
-		Stok                                  int
+		Selesai                        bool
+		inputLagi, ID, Judul, Penerbit string
+		Stok, Tahun                    int
 	)
 
 	jumlah := len(dataBuku)
@@ -85,7 +85,73 @@ func cariBuku() {
 		fmt.Println("Stok :", dataBuku[index].Stok)
 		fmt.Println("Tahun :", dataBuku[index].Tahun)
 	} else {
-		fmt.Println("Data Tidak Ditemukan :(")
+		fmt.Println("\nData Tidak Ditemukan :(")
+	}
+
+	main()
+}
+
+func tambahStok() {
+	var ID, InputBuku string
+	var maxTambah, Stok int
+	var validStok bool
+
+	fmt.Print("Masukkan Kode Buku : ")
+	fmt.Scanln(&ID)
+
+	index := prosesCariBuku(ID)
+
+	if index != -1 {
+
+		if dataBuku[index].Tahun > 2018 {
+
+			if dataBuku[index].Stok >= 3 || dataBuku[index].Stok <= 6 {
+				maxTambah = 5
+			} else if dataBuku[index].Stok >= 7 || dataBuku[index].Stok <= 9 {
+				maxTambah = 1
+			} else if dataBuku[index].Stok == 10 {
+				maxTambah = 0
+			}
+
+		} else if dataBuku[index].Tahun >= 2010 || dataBuku[index].Tahun <= 2018 {
+
+			if dataBuku[index].Stok >= 3 || dataBuku[index].Stok <= 6 {
+				maxTambah = 7
+			} else if dataBuku[index].Stok >= 7 || dataBuku[index].Stok <= 9 {
+				maxTambah = 2
+			} else if dataBuku[index].Stok == 15 {
+				maxTambah = 0
+			}
+
+		} else if dataBuku[index].Tahun < 2010 {
+			maxTambah = -1
+		}
+
+		if maxTambah == 0 {
+			fmt.Println("\nMaaf Stok Buku Sudah Tidak Dapat Ditambah Lagi")
+		} else {
+			for !validStok {
+				fmt.Print("Masukkan Jumlah Penambahan Stok : ")
+				fmt.Scanln(&Stok)
+
+				if Stok > maxTambah {
+					fmt.Println("Hanya Dapat Menambahkan", maxTambah, "Stok Buku")
+				} else {
+					dataBuku[index].Stok += Stok
+					validStok = true
+					fmt.Println("Stok Buku Berhasil Ditambahkan !")
+				}
+			}
+		}
+
+	} else {
+		fmt.Println("ID Buku Tersebut Tidak Ada")
+		fmt.Print("Ingin Menambahkan Data Buku Baru ? (Y/N) ")
+		fmt.Scanln(&InputBuku)
+
+		if InputBuku == "Y" || InputBuku == "y" {
+			tambahBuku()
+		}
 	}
 
 	main()
@@ -109,7 +175,7 @@ func main() {
 	} else if Menu == 2 {
 		cariBuku()
 	} else if Menu == 3 {
-
+		tambahStok()
 	} else if Menu == 4 {
 
 	} else if Menu == 5 {

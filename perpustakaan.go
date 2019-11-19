@@ -134,7 +134,7 @@ func tambahStok() {
 				fmt.Print("Masukkan Jumlah Penambahan Stok : ")
 				fmt.Scanln(&Stok)
 
-				if Stok > maxTambah {
+				if Stok > maxTambah || maxTambah != -1 {
 					fmt.Println("Hanya Dapat Menambahkan", maxTambah, "Stok Buku")
 				} else {
 					dataBuku[index].Stok += Stok
@@ -157,6 +157,47 @@ func tambahStok() {
 	main()
 }
 
+func sortBukuJumlah() {
+	var dataBukuSort []Buku
+
+	j := 0
+	for i := 0; i < len(dataBuku); i++ {
+		if dataBuku[i].Stok >= 7 || dataBuku[i].Stok <= 9 {
+			dataBukuSort[j] = dataBuku[i]
+			j++
+		}
+	}
+
+	sorted := false
+	jumlahBuku := len(dataBukuSort)
+	if jumlahBuku != 0 {
+		for !sorted {
+			swapped := false
+			for i := 0; i < jumlahBuku-1; i++ {
+				if dataBukuSort[i].Stok < dataBukuSort[i+1].Stok {
+					dataBukuSort[i+1], dataBukuSort[i] = dataBukuSort[i], dataBukuSort[i+1]
+					swapped = true
+				}
+			}
+			if !swapped {
+				sorted = true
+			}
+			jumlahBuku--
+		}
+
+		for i := 0; i < jumlahBuku; i++ {
+			fmt.Println("ID Buku :", dataBukuSort[i].ID)
+			fmt.Println("Judul Buku :", dataBukuSort[i].Judul)
+			fmt.Println("Penerbit Buku :", dataBukuSort[i].Penerbit)
+			fmt.Println("Stok Buku :", dataBukuSort[i].Stok)
+			fmt.Println("Tahun Buku :", dataBukuSort[i].Tahun)
+			fmt.Println("")
+		}
+	} else {
+		fmt.Println("Data Tidak Ditemukan")
+	}
+}
+
 func main() {
 
 	fmt.Println(dataBuku)
@@ -177,7 +218,7 @@ func main() {
 	} else if Menu == 3 {
 		tambahStok()
 	} else if Menu == 4 {
-
+		sortBukuJumlah()
 	} else if Menu == 5 {
 
 	} else {

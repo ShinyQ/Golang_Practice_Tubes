@@ -125,6 +125,7 @@ func cariPemesan() {
 	} else {
 		fmt.Println("ID Pemesan Tidak Valid, Data Tidak Ditemukan")
 	}
+	main()
 }
 
 func inputTujuan() {
@@ -298,6 +299,7 @@ func sortDataAnggota() {
 		)
 		table.Render()
 	}
+	main()
 }
 
 func sortDataBySaldo() {
@@ -354,6 +356,7 @@ func sortDataBySaldo() {
 	} else {
 		fmt.Println("Data Tidak Ditemukan")
 	}
+	main()
 }
 
 func tampilTransaksi() {
@@ -374,6 +377,7 @@ func tampilTransaksi() {
 	} else {
 		fmt.Println("Belum Ada Transaksi ")
 	}
+	main()
 }
 
 func main() {

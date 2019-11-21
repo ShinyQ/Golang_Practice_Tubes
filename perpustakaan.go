@@ -163,14 +163,16 @@ func sortBukuJumlah() {
 	j := 0
 	for i := 0; i < len(dataBuku); i++ {
 		if dataBuku[i].Stok >= 7 || dataBuku[i].Stok <= 9 {
-			dataBukuSort[j] = dataBuku[i]
+			dataBukuSort = append(dataBukuSort, dataBuku[i])
 			j++
 		}
 	}
 
 	sorted := false
 	jumlahBuku := len(dataBukuSort)
+
 	if jumlahBuku != 0 {
+
 		for !sorted {
 			swapped := false
 			for i := 0; i < jumlahBuku-1; i++ {
@@ -186,6 +188,7 @@ func sortBukuJumlah() {
 		}
 
 		for i := 0; i < jumlahBuku; i++ {
+			fmt.Println("")
 			fmt.Println("ID Buku :", dataBukuSort[i].ID)
 			fmt.Println("Judul Buku :", dataBukuSort[i].Judul)
 			fmt.Println("Penerbit Buku :", dataBukuSort[i].Penerbit)
@@ -196,6 +199,60 @@ func sortBukuJumlah() {
 	} else {
 		fmt.Println("Data Tidak Ditemukan")
 	}
+
+	main()
+}
+
+func updatePenerbitBuku() {
+	var penerbit string
+	var dataPenerbit []Buku
+
+	fmt.Print("Masukkan Nama Penerbit : ")
+	fmt.Scanln(&penerbit)
+
+	jumlahBuku := len(dataBuku)
+	j := 0
+
+	for i := 0; i < jumlahBuku; i++ {
+		if dataBuku[i].Penerbit == penerbit {
+			dataPenerbit[j] = dataBuku[i]
+			j++
+		}
+	}
+
+	jumlahBukuPenerbit := len(dataPenerbit)
+
+	fmt.Println("Ditemukan", jumlahBuku, "Buku Dengan Nama Penerbit", penerbit)
+
+	for i := 0; i < jumlahBukuPenerbit; i++ {
+		fmt.Println("ID Buku :", dataPenerbit[i].ID)
+		fmt.Println("Judul Buku :", dataPenerbit[i].Judul)
+		fmt.Println("Penerbit Buku :", dataPenerbit[i].Penerbit)
+		fmt.Println("Stok Buku :", dataPenerbit[i].Stok)
+		fmt.Println("Tahun Buku :", dataPenerbit[i].Tahun)
+		fmt.Println("")
+	}
+
+	fmt.Print("Masukkan Nama Penerbit Yang Akan Diubah : ")
+	fmt.Scanln(&penerbit)
+	fmt.Println("")
+
+	for i := 0; i < jumlahBukuPenerbit; i++ {
+		dataPenerbit[i].Penerbit = penerbit
+	}
+
+	fmt.Println("Data Nama Penerbit Sukses Diubah")
+
+	for i := 0; i < jumlahBukuPenerbit; i++ {
+		fmt.Println("ID Buku :", dataPenerbit[i].ID)
+		fmt.Println("Judul Buku :", dataPenerbit[i].Judul)
+		fmt.Println("Penerbit Buku :", dataPenerbit[i].Penerbit)
+		fmt.Println("Stok Buku :", dataPenerbit[i].Stok)
+		fmt.Println("Tahun Buku :", dataPenerbit[i].Tahun)
+		fmt.Println("")
+	}
+
+	main()
 }
 
 func main() {
@@ -207,6 +264,7 @@ func main() {
 	fmt.Println("3. Tambah Stok Buku")
 	fmt.Println("4. Cari Buku Berdasarkan Jumlah")
 	fmt.Println("5. Ubah Penerbit Buku")
+	fmt.Println("6. Keluar Program")
 
 	fmt.Print("Pilih Menu : ")
 	fmt.Scanln(&Menu)
@@ -220,7 +278,9 @@ func main() {
 	} else if Menu == 4 {
 		sortBukuJumlah()
 	} else if Menu == 5 {
-
+		updatePenerbitBuku()
+	} else if Menu == 6 {
+		defer fmt.Println("Sukses Keluar Program")
 	} else {
 		fmt.Println("Menu Tersebut Tidak Ada !")
 		main()

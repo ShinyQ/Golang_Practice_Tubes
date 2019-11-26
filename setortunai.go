@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"math/rand"
+	"strings"
 	"time"
 )
 
@@ -59,10 +60,10 @@ func registrasi() {
 		norek = "XYZ-S" + fmt.Sprintf("%03d", cariRekening(jenisRek))
 	} else if jenis == 2 {
 		jenisRek = "Gold"
-		norek = "XYZ-G" + fmt.Sprintf("%04d", cariRekening(jenisRek))
+		norek = "XYZ-G" + fmt.Sprintf("%03d", cariRekening(jenisRek))
 	} else {
 		jenisRek = "Platinum"
-		norek = "XYZ-P" + fmt.Sprintf("%04d", cariRekening(jenisRek))
+		norek = "XYZ-P" + fmt.Sprintf("%03d", cariRekening(jenisRek))
 	}
 
 	tanggalDaftar = waktu
@@ -118,7 +119,7 @@ func login_cs() {
 	}
 }
 
-func login_ns(rekening string, pin int) int {
+func login_nasabah_validasi(rekening string, pin int) int {
 	index := -1
 	for i := 0; i < len(TArrNasabah); i++ {
 		if TArrNasabah[i].norek == rekening {
@@ -180,13 +181,177 @@ func login_nasabah() {
 	fmt.Print("Masukkan PIN Nasabah : ")
 	fmt.Scanln(&pin)
 
-	index := login_ns(rekening, pin)
+	index := login_nasabah_validasi(rekening, pin)
 	if index != -1 {
 		nasabah_setoran(index)
 	} else {
 		fmt.Println("\nNomor Rekening Atau PIN Salah\n")
 		login_nasabah()
 	}
+}
+
+func proses_cari_nasabah(norek string) int {
+	index := -1
+	for i := 0; i < len(TArrNasabah); i++ {
+		if TArrNasabah[i].norek == norek {
+			index = i
+		}
+	}
+	return index
+}
+
+func cari_nasabah() {
+	var norek string
+
+	fmt.Print("Masukkan Nomor Rekening Nasabah : ")
+	fmt.Scanln(&norek)
+
+	index := proses_cari_nasabah(norek)
+
+	if index != -1 {
+		fmt.Println("Data Ditemukan :")
+		fmt.Println("NIK :", TArrNasabah[index].nik)
+		fmt.Println("Nama :", TArrNasabah[index].nama)
+		fmt.Println("PIN :", TArrNasabah[index].pin)
+		fmt.Println("Nomor Rekening :", TArrNasabah[index].norek)
+		fmt.Println("Jenis ATM :", TArrNasabah[index].jenis)
+		fmt.Println("Setoran :", TArrNasabah[index].saldo)
+		fmt.Println("Transaksi Terahir :", TArrNasabah[index].transaksiTerakhir)
+		fmt.Println("Nominal Transaksi Terahir :", TArrNasabah[index].nominalTerakhir)
+	} else {
+		fmt.Println("Maaf, Data Nasabah Tidak Ditemukan")
+	}
+	login_manager()
+}
+
+func tampil_nasabah() {
+	var sortNasabah []TNasabah
+	var sorted bool
+
+	jumlah := len(TArrNasabah)
+	if jumlah != 0 {
+
+		for i := 0; i < len(TArrNasabah); i++ {
+			nasabah := TNasabah{
+				nama:              TArrNasabah[i].nama,
+				jenis:             TArrNasabah[i].jenis,
+				nik:               TArrNasabah[i].nik,
+				nominalTerakhir:   TArrNasabah[i].nominalTerakhir,
+				norek:             TArrNasabah[i].norek,
+				pin:               TArrNasabah[i].pin,
+				saldo:             TArrNasabah[i].saldo,
+				tanggalDaftar:     TArrNasabah[i].tanggalDaftar,
+				transaksiTerakhir: TArrNasabah[i].transaksiTerakhir,
+			}
+			sortNasabah = append(sortNasabah, nasabah)
+		}
+
+		for !sorted {
+			swapped := false
+			for i := 0; i < jumlah-1; i++ {
+				if sortNasabah[i].norek > sortNasabah[i+1].norek {
+					sortNasabah[i+1], sortNasabah[i] = sortNasabah[i], sortNasabah[i+1]
+					swapped = true
+				}
+			}
+			if !swapped {
+				sorted = true
+			}
+			jumlah--
+		}
+
+		fmt.Println("Ditemukan : ", len(sortNasabah), "Data Nasabah")
+		for i := 0; i < len(sortNasabah); i++ {
+			fmt.Println("")
+			fmt.Println("NIK :", sortNasabah[i].nik)
+			fmt.Println("Nama :", sortNasabah[i].nama)
+			fmt.Println("PIN :", sortNasabah[i].pin)
+			fmt.Println("Nomor Rekening :", sortNasabah[i].norek)
+			fmt.Println("Jenis ATM :", sortNasabah[i].jenis)
+			fmt.Println("Setoran :", sortNasabah[i].saldo)
+			fmt.Println("Transaksi Terahir :", sortNasabah[i].transaksiTerakhir)
+			fmt.Println("Nominal Transaksi Terahir :", sortNasabah[i].nominalTerakhir)
+		}
+		fmt.Println("")
+	} else {
+		fmt.Println("Tidak Ada Data Nasabah")
+	}
+
+	login_manager()
+}
+
+func nasabah_jenis_rekening() {
+	var jenis string
+	var validJenis, sorted bool
+	var sortNasabah []TNasabah
+
+	for !validJenis {
+		fmt.Print("Masukkan Jenis Rekening : ")
+		fmt.Scanln(&jenis)
+
+		jenis = strings.ToUpper(jenis)
+		if jenis == "SILVER" || jenis == "GOLD" || jenis == "PLATINUM" {
+			validJenis = true
+		} else {
+			fmt.Println("Jenis Rekening Tersebut Tidak Ada")
+		}
+	}
+
+	if len(TArrNasabah) != 0 {
+		for i := 0; i < len(TArrNasabah); i++ {
+			if strings.ToUpper(TArrNasabah[i].jenis) == strings.ToUpper(jenis) {
+				nasabah := TNasabah{
+					nama:              TArrNasabah[i].nama,
+					jenis:             TArrNasabah[i].jenis,
+					nik:               TArrNasabah[i].nik,
+					nominalTerakhir:   TArrNasabah[i].nominalTerakhir,
+					norek:             TArrNasabah[i].norek,
+					pin:               TArrNasabah[i].pin,
+					saldo:             TArrNasabah[i].saldo,
+					tanggalDaftar:     TArrNasabah[i].tanggalDaftar,
+					transaksiTerakhir: TArrNasabah[i].transaksiTerakhir,
+				}
+				sortNasabah = append(sortNasabah, nasabah)
+			}
+		}
+		if len(sortNasabah) != 0 {
+			jumlah := len(sortNasabah)
+			for !sorted {
+				swapped := false
+				for i := 0; i < jumlah-1; i++ {
+					if sortNasabah[i].nama > sortNasabah[i+1].nama {
+						sortNasabah[i+1], sortNasabah[i] = sortNasabah[i], sortNasabah[i+1]
+						swapped = true
+					}
+				}
+				if !swapped {
+					sorted = true
+				}
+				jumlah--
+			}
+
+			fmt.Println("Ditemukan : ", len(sortNasabah), "Data Nasabah Dengan Jenis Rekening", sortNasabah[0].jenis)
+			for i := 0; i < len(sortNasabah); i++ {
+				fmt.Println("")
+				fmt.Println("NIK :", sortNasabah[i].nik)
+				fmt.Println("Nama :", sortNasabah[i].nama)
+				fmt.Println("PIN :", sortNasabah[i].pin)
+				fmt.Println("Nomor Rekening :", sortNasabah[i].norek)
+				fmt.Println("Jenis ATM :", sortNasabah[i].jenis)
+				fmt.Println("Setoran :", sortNasabah[i].saldo)
+				fmt.Println("Transaksi Terahir :", sortNasabah[i].transaksiTerakhir)
+				fmt.Println("Nominal Transaksi Terahir :", sortNasabah[i].nominalTerakhir)
+			}
+		} else {
+			fmt.Println("Data Nasabah Dengan Jenis Rekening", jenis, "Tidak Ditemukan")
+		}
+
+		fmt.Println("")
+	} else {
+		fmt.Println("Belum Ada Data Nasabah")
+	}
+
+	login_manager()
 }
 
 func login_manager() {
@@ -216,13 +381,13 @@ func login_manager() {
 	fmt.Print("Masukkan nomor menu pilihan anda : ")
 	fmt.Scanln(&pilih)
 	if pilih == 1 {
-		fmt.Print("DUMMY TAMPIL SATU NASABAH")
+		cari_nasabah()
 	} else if pilih == 2 {
-		fmt.Print("DUMMY TAMPIL SELURUH NASABAH")
+		tampil_nasabah()
 	} else if pilih == 3 {
 		fmt.Print("DUMMY TIDAK MELAKUKAN TRANSAKSI")
 	} else if pilih == 4 {
-		fmt.Print("DUMMY PER JENIS REKENING")
+		nasabah_jenis_rekening()
 	} else {
 		fmt.Println("ERROR, Masukkan nomor pilihan yang tersedia")
 	}
@@ -231,7 +396,9 @@ func login_manager() {
 func main() {
 
 	TArrNasabah = append(TArrNasabah,
-		TNasabah{"1234567890123456", "Dony", "XYZ-S0001", "Silver", 123456, 500000, 500000, "2019-11-25", "2019-11-25"},
+		TNasabah{"1234567890123456", "Dony", "XYZ-S002", "Silver", 123456, 500000, 500000, "2019-11-25", "2019-11-25"},
+		TNasabah{"1234567890123456", "Aini", "XYZ-S001", "Silver", 123456, 500000, 500000, "2019-11-25", "2019-11-25"},
+		TNasabah{"1234567890123456", "Angela", "XYZ-G001", "Gold", 123456, 500000, 500000, "2019-11-25", "2019-11-25"},
 	)
 
 	fmt.Println(TArrNasabah)

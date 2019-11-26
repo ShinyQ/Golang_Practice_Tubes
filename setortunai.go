@@ -92,28 +92,35 @@ func registrasi() {
 
 func login_cs() {
 	var username, password string
+	var validcs bool
 
 	fmt.Println("\n======================================")
 	fmt.Println("1). LOGIN CUSTOMER SERVICE")
 	fmt.Println("======================================")
-	fmt.Print("Masukkan username Customer Service : ")
-	fmt.Scanln(&username)
-	fmt.Print("Masukkan password Customer Service : ")
-	fmt.Scanln(&password)
-	for username != "admin" && password != "root" {
+
+	for !validcs {
 		fmt.Print("Masukkan username Customer Service : ")
 		fmt.Scanln(&username)
 		fmt.Print("Masukkan password Customer Service : ")
 		fmt.Scanln(&password)
+		if username != "admin" && password != "root" {
+			fmt.Println("\nUsername Atau Password Salah\n")
+		} else {
+			validcs = true
+		}
 	}
-	fmt.Println("======================================")
+
+	fmt.Println("\n======================================")
 	fmt.Println(">>> MENU CUSTOMER SERVICE <<<")
 	fmt.Println("======================================")
 	fmt.Println("1). Registrasi nasabah baru")
+	fmt.Println("2). Menu Utama")
 	fmt.Print("Masukkan nomor menu pilihan anda : ")
 	fmt.Scanln(&pilih)
 	if pilih == 1 {
 		registrasi()
+	} else if pilih == 2 {
+		main()
 	} else {
 		fmt.Println("ERROR, Masukkan nomor pilihan yang tersedia")
 	}
@@ -176,17 +183,29 @@ func login_nasabah() {
 	fmt.Println("======================================")
 	fmt.Println("2). LOGIN NASABAH")
 	fmt.Println("======================================")
-	fmt.Print("Masukkan No. Rekening Nasabah : ")
-	fmt.Scanln(&rekening)
-	fmt.Print("Masukkan PIN Nasabah : ")
-	fmt.Scanln(&pin)
+	fmt.Println("1). Tambah Setoran")
+	fmt.Println("2). Menu Utama")
 
-	index := login_nasabah_validasi(rekening, pin)
-	if index != -1 {
-		nasabah_setoran(index)
+	fmt.Print("Silahkan Pilih Menu : ")
+	fmt.Scanln(&pilih)
+
+	if pilih == 1 {
+		fmt.Print("Masukkan No. Rekening Nasabah : ")
+		fmt.Scanln(&rekening)
+		fmt.Print("Masukkan PIN Nasabah : ")
+		fmt.Scanln(&pin)
+
+		index := login_nasabah_validasi(rekening, pin)
+		if index != -1 {
+			nasabah_setoran(index)
+		} else {
+			fmt.Println("\nNomor Rekening Atau PIN Salah\n")
+			login_nasabah()
+		}
+	} else if pilih == 2 {
+		main()
 	} else {
-		fmt.Println("\nNomor Rekening Atau PIN Salah\n")
-		login_nasabah()
+		fmt.Println("Menu Tersebut Tidak Ada")
 	}
 }
 
@@ -293,7 +312,7 @@ func nasabah_jenis_rekening() {
 		if jenis == "SILVER" || jenis == "GOLD" || jenis == "PLATINUM" {
 			validJenis = true
 		} else {
-			fmt.Println("Jenis Rekening Tersebut Tidak Ada")
+			fmt.Println("Jenis Rekening Tersebut Tidak Ada\n")
 		}
 	}
 
@@ -378,6 +397,7 @@ func login_manager() {
 	fmt.Println("2). Tampilkan seluruh nasabah")
 	fmt.Println("3). Tampilkan nasabah yang tidak melakukan transaksi")
 	fmt.Println("4). Tampilkan nasabah per jenis rekening")
+	fmt.Println("5). Menu Utama")
 	fmt.Print("Masukkan nomor menu pilihan anda : ")
 	fmt.Scanln(&pilih)
 	if pilih == 1 {
@@ -388,8 +408,10 @@ func login_manager() {
 		fmt.Print("DUMMY TIDAK MELAKUKAN TRANSAKSI")
 	} else if pilih == 4 {
 		nasabah_jenis_rekening()
+	} else if pilih == 5 {
+		main()
 	} else {
-		fmt.Println("ERROR, Masukkan nomor pilihan yang tersedia")
+		fmt.Println("ERROR, Masukkan nomor pilihan yang tersedia\n")
 	}
 }
 

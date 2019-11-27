@@ -33,17 +33,41 @@ func cariRekening(jenisRek string) int {
 	return count
 }
 
-func registrasi() {
-	var nik, nama, norek, jenisRek string
-	var pin, jenis, saldo, nominalTerakhir int
-	var tanggalDaftar, transaksiTerakhir string
+func cari_nik(nik string) int {
+	validnik := -1
+	for i := 0; i < len(TArrNasabah); i++ {
+		if TArrNasabah[i].nik == nik {
+			validnik = 0
+		}
+	}
+	return validnik
+}
 
-	for len(nik) != 16 || nama == "" || jenis < 1 && jenis > 3 || saldo < 1000 {
+func registrasi() {
+	var (
+		nik, nama, norek, jenisRek                  string
+		pin, jenis, saldo, nominalTerakhir          int
+		tanggalDaftar, transaksiTerakhir            string
+		validnik, validJenis, validSetoran, Selesai bool
+		inputLagi                                   string
+	)
+
+	for !Selesai {
 		fmt.Println("======================================")
 		fmt.Println(">>> REGISTRASI NASABAH BARU <<<")
 		fmt.Println("======================================")
-		fmt.Print("Masukkan NIK Nasabah     : ")
-		fmt.Scanln(&nik)
+
+		for !validnik {
+			fmt.Print("Masukkan NIK Nasabah : ")
+			fmt.Scanln(&nik)
+			if len(nik) != 16 {
+				fmt.Println("\nNIK Harus 16 Digit\n")
+			} else if cari_nik(nik) == -1 {
+				validnik = true
+			} else {
+				fmt.Println("\nNIK Tersebut Sudah Ada\n")
+			}
+		}
 
 		fmt.Print("Masukkan nama Nasabah    : ")
 		fmt.Scanln(&nama)
@@ -51,42 +75,56 @@ func registrasi() {
 		fmt.Print("Masukkan jenis Nasabah   : ")
 		fmt.Scanln(&jenis)
 
-		fmt.Print("Masukkan setoran Nasabah : ")
-		fmt.Scanln(&saldo)
+		for !validSetoran {
+			fmt.Print("Masukkan setoran Nasabah : ")
+			fmt.Scanln(&saldo)
+
+			if saldo < 1000 && saldo%100 != 0 {
+				fmt.Println("\nJumlah Setoran Tidak Valid\n")
+			} else {
+				validSetoran = true
+			}
+		}
+
+		if jenis == 1 {
+			jenisRek = "Silver"
+			norek = "XYZ-S" + fmt.Sprintf("%03d", cariRekening(jenisRek))
+		} else if jenis == 2 {
+			jenisRek = "Gold"
+			norek = "XYZ-G" + fmt.Sprintf("%03d", cariRekening(jenisRek))
+		} else {
+			jenisRek = "Platinum"
+			norek = "XYZ-P" + fmt.Sprintf("%03d", cariRekening(jenisRek))
+		}
+
+		tanggalDaftar = waktu
+		transaksiTerakhir = waktu
+		rand.Seed(time.Now().UnixNano())
+		pin = 100000 + rand.Intn(999999-100000+1)
+		index := len(TArrNasabah)
+
+		nasabah := TNasabah{
+			nik, nama, norek, jenisRek, pin,
+			saldo, nominalTerakhir,
+			tanggalDaftar, transaksiTerakhir,
+		}
+		TArrNasabah = append(TArrNasabah, nasabah)
+
+		fmt.Println("\nData Nasabah Sukses Di Inputkan :")
+		fmt.Println("NIK :", TArrNasabah[index].nik)
+		fmt.Println("Nama :", TArrNasabah[index].nama)
+		fmt.Println("PIN :", TArrNasabah[index].pin)
+		fmt.Println("Nomor Rekening :", TArrNasabah[index].norek)
+		fmt.Println("Jenis ATM :", TArrNasabah[index].jenis)
+		fmt.Println("Setoran Awal :", TArrNasabah[index].saldo)
+
+		fmt.Print("\nInput Data Nasabah Lagi (Y/N)? ")
+		fmt.Scanln(&inputLagi)
+
+		if inputLagi == "N" || inputLagi == "n" {
+			Selesai = true
+		}
 	}
-
-	if jenis == 1 {
-		jenisRek = "Silver"
-		norek = "XYZ-S" + fmt.Sprintf("%03d", cariRekening(jenisRek))
-	} else if jenis == 2 {
-		jenisRek = "Gold"
-		norek = "XYZ-G" + fmt.Sprintf("%03d", cariRekening(jenisRek))
-	} else {
-		jenisRek = "Platinum"
-		norek = "XYZ-P" + fmt.Sprintf("%03d", cariRekening(jenisRek))
-	}
-
-	tanggalDaftar = waktu
-	transaksiTerakhir = waktu
-	rand.Seed(time.Now().UnixNano())
-	pin = 100000 + rand.Intn(999999-100000+1)
-	index := len(TArrNasabah)
-
-	nasabah := TNasabah{
-		nik, nama, norek, jenisRek, pin,
-		saldo, nominalTerakhir,
-		tanggalDaftar, transaksiTerakhir,
-	}
-	TArrNasabah = append(TArrNasabah, nasabah)
-
-	fmt.Println("\nData Nasabah Sukses Di Inputkan :")
-	fmt.Println("NIK :", TArrNasabah[index].nik)
-	fmt.Println("Nama :", TArrNasabah[index].nama)
-	fmt.Println("PIN :", TArrNasabah[index].pin)
-	fmt.Println("Nomor Rekening :", TArrNasabah[index].norek)
-	fmt.Println("Jenis ATM :", TArrNasabah[index].jenis)
-	fmt.Println("Setoran Awal :", TArrNasabah[index].saldo)
-
 	login_cs()
 }
 
@@ -142,9 +180,11 @@ func login_nasabah_validasi(rekening string, pin int) int {
 }
 
 func nasabah_setoran(index int) {
-	var setoran int
-	var max int
-	var validSetoran bool
+	var (
+		setoran, max          int
+		validSetoran, Selesai bool
+		inputLagi             string
+	)
 
 	if TArrNasabah[index].jenis == "Silver" {
 		max = 10000
@@ -154,24 +194,33 @@ func nasabah_setoran(index int) {
 		max = 50000
 	}
 
-	for !validSetoran {
-		fmt.Println("Masukkan Jumlah Setoran (Max :", max, ") : ")
-		fmt.Scanln(&setoran)
+	for !Selesai {
+		for !validSetoran {
+			fmt.Println("Masukkan Jumlah Setoran (Max :", max, ") : ")
+			fmt.Scanln(&setoran)
+			if setoran < 0 {
+				fmt.Println("Jumlah Setoran Tidak Valid")
+			} else if setoran%100 != 0 {
+				fmt.Println("Setoran Harus Kelipatan 100")
+			} else if setoran > max {
+				fmt.Println("Anda Sudah Melebihi Maksimal Setoran")
+			} else {
+				validSetoran = true
+			}
+		}
 
-		if setoran%100 != 0 {
-			fmt.Println("Setoran Harus Kelipatan 100")
-		} else if setoran > max {
-			fmt.Println("Anda Sudah Melebihi Maksimal Setoran")
-		} else {
-			validSetoran = true
+		TArrNasabah[index].saldo += setoran
+		TArrNasabah[index].transaksiTerakhir = waktu
+		TArrNasabah[index].nominalTerakhir = setoran
+
+		fmt.Println("Sukses Menambahkan Setoran Sebesar", setoran)
+
+		fmt.Print("\nInput Lagi ? ")
+		fmt.Scanln(&inputLagi)
+		if inputLagi == "N" || inputLagi == "n" {
+			Selesai = true
 		}
 	}
-
-	TArrNasabah[index].saldo += setoran
-	TArrNasabah[index].transaksiTerakhir = waktu
-	TArrNasabah[index].nominalTerakhir = setoran
-
-	fmt.Println("Sukses Menambahkan Setoran Sebesar", setoran)
 
 	login_nasabah()
 }

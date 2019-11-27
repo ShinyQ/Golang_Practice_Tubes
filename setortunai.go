@@ -48,12 +48,12 @@ func registrasi() {
 		nik, nama, norek, jenisRek                  string
 		pin, jenis, saldo, nominalTerakhir          int
 		tanggalDaftar, transaksiTerakhir            string
-		validnik, validJenis, validSetoran, Selesai bool
+		validnik, validSetoran, validJenis, Selesai bool
 		inputLagi                                   string
 	)
 
 	for !Selesai {
-		fmt.Println("======================================")
+		fmt.Println("\n======================================")
 		fmt.Println(">>> REGISTRASI NASABAH BARU <<<")
 		fmt.Println("======================================")
 
@@ -72,8 +72,21 @@ func registrasi() {
 		fmt.Print("Masukkan nama Nasabah    : ")
 		fmt.Scanln(&nama)
 
-		fmt.Print("Masukkan jenis Nasabah   : ")
-		fmt.Scanln(&jenis)
+		fmt.Println("\nJenis Rekening")
+		fmt.Println("1. Silver")
+		fmt.Println("2. Gold")
+		fmt.Println("3. Platinum\n")
+
+		for !validJenis {
+			fmt.Print("Masukkan Jenis Rekening (1/2/3): ")
+			fmt.Scanln(&jenis)
+
+			if jenis > 0 && jenis < 3 {
+				validJenis = true
+			} else {
+				fmt.Println("\n Jenis Rekening Tersebut Tidak Ada \n")
+			}
+		}
 
 		for !validSetoran {
 			fmt.Print("Masukkan setoran Nasabah : ")
@@ -125,12 +138,14 @@ func registrasi() {
 			Selesai = true
 		}
 	}
-	login_cs()
+	menu_cs()
 }
 
 func login_cs() {
-	var username, password string
-	var validcs bool
+	var (
+		username, password string
+		validcs            bool
+	)
 
 	fmt.Println("\n======================================")
 	fmt.Println("1). LOGIN CUSTOMER SERVICE")
@@ -147,6 +162,10 @@ func login_cs() {
 			validcs = true
 		}
 	}
+	menu_cs()
+}
+
+func menu_cs() {
 
 	fmt.Println("\n======================================")
 	fmt.Println(">>> MENU CUSTOMER SERVICE <<<")
@@ -161,6 +180,7 @@ func login_cs() {
 		main()
 	} else {
 		fmt.Println("ERROR, Masukkan nomor pilihan yang tersedia")
+		menu_cs()
 	}
 }
 
@@ -196,14 +216,14 @@ func nasabah_setoran(index int) {
 
 	for !Selesai {
 		for !validSetoran {
-			fmt.Println("Masukkan Jumlah Setoran (Max :", max, ") : ")
+			fmt.Print("Masukkan Jumlah Setoran ( Max :", max, "): ")
 			fmt.Scanln(&setoran)
 			if setoran < 0 {
-				fmt.Println("Jumlah Setoran Tidak Valid")
+				fmt.Println("\nJumlah Setoran Tidak Valid\n")
 			} else if setoran%100 != 0 {
-				fmt.Println("Setoran Harus Kelipatan 100")
+				fmt.Println("\nSetoran Harus Kelipatan 100\n")
 			} else if setoran > max {
-				fmt.Println("Anda Sudah Melebihi Maksimal Setoran")
+				fmt.Println("\nAnda Sudah Melebihi Maksimal Setoran\n")
 			} else {
 				validSetoran = true
 			}
@@ -213,9 +233,9 @@ func nasabah_setoran(index int) {
 		TArrNasabah[index].transaksiTerakhir = waktu
 		TArrNasabah[index].nominalTerakhir = setoran
 
-		fmt.Println("Sukses Menambahkan Setoran Sebesar", setoran)
+		fmt.Println("\nSukses Menambahkan Setoran Sebesar", setoran, "\n")
 
-		fmt.Print("\nInput Lagi ? ")
+		fmt.Print("\nInput Lagi (Y/N) ? ")
 		fmt.Scanln(&inputLagi)
 		if inputLagi == "N" || inputLagi == "n" {
 			Selesai = true
@@ -229,7 +249,7 @@ func login_nasabah() {
 	var rekening string
 	var pin int
 
-	fmt.Println("======================================")
+	fmt.Println("\n======================================")
 	fmt.Println("2). LOGIN NASABAH")
 	fmt.Println("======================================")
 	fmt.Println("1). Tambah Setoran")
@@ -255,6 +275,7 @@ func login_nasabah() {
 		main()
 	} else {
 		fmt.Println("Menu Tersebut Tidak Ada")
+		login_nasabah()
 	}
 }
 
@@ -289,7 +310,7 @@ func cari_nasabah() {
 	} else {
 		fmt.Println("Maaf, Data Nasabah Tidak Ditemukan")
 	}
-	login_manager()
+	menu_manager()
 }
 
 func tampil_nasabah() {
@@ -345,7 +366,7 @@ func tampil_nasabah() {
 		fmt.Println("Tidak Ada Data Nasabah")
 	}
 
-	login_manager()
+	menu_manager()
 }
 
 func nasabah_jenis_rekening() {
@@ -398,9 +419,8 @@ func nasabah_jenis_rekening() {
 				jumlah--
 			}
 
-			fmt.Println("Ditemukan : ", len(sortNasabah), "Data Nasabah Dengan Jenis Rekening", sortNasabah[0].jenis)
+			fmt.Println("\nDitemukan : ", len(sortNasabah), "Data Nasabah Dengan Jenis Rekening", sortNasabah[0].jenis)
 			for i := 0; i < len(sortNasabah); i++ {
-				fmt.Println("")
 				fmt.Println("NIK :", sortNasabah[i].nik)
 				fmt.Println("Nama :", sortNasabah[i].nama)
 				fmt.Println("PIN :", sortNasabah[i].pin)
@@ -414,19 +434,17 @@ func nasabah_jenis_rekening() {
 			fmt.Println("Data Nasabah Dengan Jenis Rekening", jenis, "Tidak Ditemukan")
 		}
 
-		fmt.Println("")
 	} else {
 		fmt.Println("Belum Ada Data Nasabah")
 	}
 
-	login_manager()
+	menu_manager()
 }
 
 func login_manager() {
 	var username, password string
-	var pilih int
 
-	fmt.Println("======================================")
+	fmt.Println("\n======================================")
 	fmt.Println("3). LOGIN MANAGER")
 	fmt.Println("======================================")
 	fmt.Print("Masukkan username Manager : ")
@@ -439,7 +457,11 @@ func login_manager() {
 		fmt.Print("Masukkan password Manager : ")
 		fmt.Scanln(&password)
 	}
-	fmt.Println("======================================")
+	menu_manager()
+}
+
+func menu_manager() {
+	fmt.Println("\n======================================")
 	fmt.Println(">>> MENU MANAGER <<<")
 	fmt.Println("======================================")
 	fmt.Println("1). Tampilkan satu nasabah")
@@ -461,20 +483,17 @@ func login_manager() {
 		main()
 	} else {
 		fmt.Println("ERROR, Masukkan nomor pilihan yang tersedia\n")
+		menu_manager()
 	}
 }
 
 func main() {
 
-	TArrNasabah = append(TArrNasabah,
-		TNasabah{"1234567890123456", "Dony", "XYZ-S002", "Silver", 123456, 500000, 500000, "2019-11-25", "2019-11-25"},
-		TNasabah{"1234567890123456", "Aini", "XYZ-S001", "Silver", 123456, 500000, 500000, "2019-11-25", "2019-11-25"},
-		TNasabah{"1234567890123456", "Angela", "XYZ-G001", "Gold", 123456, 500000, 500000, "2019-11-25", "2019-11-25"},
-	)
+	if len(TArrNasabah) == 0 {
+		tambahData()
+	}
 
-	fmt.Println(TArrNasabah)
-
-	fmt.Println("======================================")
+	fmt.Println("\n======================================")
 	fmt.Println("MENU UTAMA SETOR TUNAI ATM")
 	fmt.Println("======================================")
 	fmt.Println("1). LOGIN CUSTOMER SERVICE")
@@ -492,6 +511,15 @@ func main() {
 		login_manager()
 	} else {
 		fmt.Println("ERROR, Masukkan nomor pilihan yang tersedia")
+		main()
 	}
 
+}
+
+func tambahData() {
+	TArrNasabah = append(TArrNasabah,
+		TNasabah{"1234567890123456", "Dony", "XYZ-S002", "Silver", 123456, 500000, 500000, "2019-11-25", "2019-11-25"},
+		TNasabah{"1234567890123455", "Aini", "XYZ-S001", "Silver", 123456, 500000, 500000, "2019-11-25", "2019-11-25"},
+		TNasabah{"1234567890123454", "Angela", "XYZ-G001", "Gold", 123456, 500000, 500000, "2019-11-25", "2019-11-25"},
+	)
 }

@@ -156,10 +156,10 @@ func login_cs() {
 		fmt.Scanln(&username)
 		fmt.Print("Masukkan password Customer Service : ")
 		fmt.Scanln(&password)
-		if username != "admin" && password != "root" {
-			fmt.Println("\nUsername Atau Password Salah\n")
-		} else {
+		if username == "admin" && password == "root" {
 			validcs = true
+		} else {
+			fmt.Println("\nUsername Atau Password Salah\n")
 		}
 	}
 	menu_cs()
@@ -443,19 +443,20 @@ func nasabah_jenis_rekening() {
 
 func login_manager() {
 	var username, password string
-
+	var validLogin bool
 	fmt.Println("\n======================================")
 	fmt.Println("3). LOGIN MANAGER")
 	fmt.Println("======================================")
-	fmt.Print("Masukkan username Manager : ")
-	fmt.Scanln(&username)
-	fmt.Print("Masukkan password Manager : ")
-	fmt.Scanln(&password)
-	for username != "manager" && password != "root" {
+	for !validLogin {
 		fmt.Print("Masukkan username Manager : ")
 		fmt.Scanln(&username)
 		fmt.Print("Masukkan password Manager : ")
 		fmt.Scanln(&password)
+		if username == "manager" && password == "root" {
+			validLogin = true
+		} else {
+			fmt.Println("\n Username Atau Password Yang Anda Masukkan Salah \n")
+		}
 	}
 	menu_manager()
 }

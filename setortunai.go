@@ -192,8 +192,10 @@ func login_nasabah_validasi(rekening string, pin int) int {
 		}
 	}
 
-	if TArrNasabah[index].pin != pin {
-		index = -1
+	if index != -1 {
+		if TArrNasabah[index].pin != pin {
+			index = -1
+		}
 	}
 
 	return index
@@ -216,7 +218,7 @@ func nasabah_setoran(index int) {
 
 	for !Selesai {
 		for !validSetoran {
-			fmt.Print("Masukkan Jumlah Setoran ( Max :", max, "): ")
+			fmt.Print("Masukkan Jumlah Setoran ( Max :", max, " ): ")
 			fmt.Scanln(&setoran)
 			if setoran < 0 {
 				fmt.Println("\nJumlah Setoran Tidak Valid\n")
@@ -268,7 +270,7 @@ func login_nasabah() {
 		if index != -1 {
 			nasabah_setoran(index)
 		} else {
-			fmt.Println("\nNomor Rekening Atau PIN Salah\n")
+			fmt.Println("\nNomor Rekening Atau PIN Salah")
 			login_nasabah()
 		}
 	} else if pilih == 2 {
@@ -370,25 +372,37 @@ func tampil_nasabah() {
 }
 
 func nasabah_jenis_rekening() {
-	var jenis string
+	var jenis int
+	var jenisTab string
 	var validJenis, sorted bool
 	var sortNasabah []TNasabah
 
-	for !validJenis {
-		fmt.Print("Masukkan Jenis Rekening : ")
-		fmt.Scanln(&jenis)
+	fmt.Println("\nJenis Rekening")
+	fmt.Println("1. Silver")
+	fmt.Println("2. Gold")
+	fmt.Println("3. Platinum\n")
 
-		jenis = strings.ToUpper(jenis)
-		if jenis == "SILVER" || jenis == "GOLD" || jenis == "PLATINUM" {
+	for !validJenis {
+		fmt.Print("Masukkan Jenis Rekening (1/2/3): ")
+
+		if jenis == 1 || jenis == 2 || jenis == 3 {
 			validJenis = true
 		} else {
 			fmt.Println("Jenis Rekening Tersebut Tidak Ada\n")
 		}
 	}
 
+	if jenis == 1 {
+		jenisTab = "Silver"
+	} else if jenis == 2 {
+		jenisTab = "Gold"
+	} else {
+		jenisTab = "Platinum"
+	}
+
 	if len(TArrNasabah) != 0 {
 		for i := 0; i < len(TArrNasabah); i++ {
-			if strings.ToUpper(TArrNasabah[i].jenis) == strings.ToUpper(jenis) {
+			if strings.ToUpper(TArrNasabah[i].jenis) == strings.ToUpper(jenisTab) {
 				nasabah := TNasabah{
 					nama:              TArrNasabah[i].nama,
 					jenis:             TArrNasabah[i].jenis,

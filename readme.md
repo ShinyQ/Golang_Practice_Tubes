@@ -20,12 +20,6 @@ buku. Jika stok buku saat ini berjumlah 15, maka tidak boleh ada penambahan buku
 • Untuk buku dengan tahun terbit antara < 2010:
 Penambahan buku boleh berapa-pun.
 
-5. Menampilkan buku yang jumlah stok-nya 7-9 buah dan diurutkan mulai dari stok
-tertinggi ke terendah.
-
-6. Mengubah semua buku yang memiliki nama penerbit yang sama. Contoh: semula
-nama penerbitnya “X”, diubah menjadi “Y”. Tampilkan di layar bahwa nama penerbit
-setelah diubah.
 
 ## Case 2 : Aplikasi Rental Mobil
 
@@ -54,3 +48,58 @@ nama anggota.
 
 7. Menampilkan seluruh data anggota yang memiliki saldo > Rp 50000 dan diiurutkan
 secara descending berdasarkan nama anggota.
+
+## Case 3 : Setor Tunai ATM
+
+Disimpan data nasabah di Bank XYZ yang terdiri dari nomor rekening, pin, NIK, nama, jenis rekening,
+saldo, tanggal pendaftaran, tanggal transaksi terakhir, dan nominal transaksi terakhir. Seorang
+nasabah di Bank XYZ hanya boleh memiliki satu rekening. Buat program untuk mengelola transaksi
+setor tunai di Bank XYZ, dengan spesifikasi sebagai berikut:
+
+1. Login Customer Service
+Asumsi hanya ada satu akun untuk login Customer Service.
+a. Pendaftaran nasabah baru
+i. Input NIK, nama, jenis rekening, dan setoran awal.
+ii. NIK, nama, jenis rekening, dan setoran awal tidak boleh kosong.
+iii. NIK valid jika berupa 16 digit angka. NIK tidak boleh duplikat.
+iv. Ada 3 jenis rekening, yaitu Silver, Gold, dan Platinum.
+v. Setoran awal harus positif, minimal adalah 1000.
+vi. Nomor rekening di-generate secara otomatis dengan format: XYZ-[S/G/P
+sesuai jenis nasabah][nomor urut sesuai jenis rekening dalam 3 digit],
+contoh: XYZ-S004 (artinya nasabah rekening Silver urutan ke-4).
+vii. Pin di-generate secara otomatis berup 6 digit angka.
+viii. Saldo untuk rekening tersebut diinisialisai dengan setoran awal.
+ix. Tanggal pendaftaran dan tanggal transaksi terakhir diambil otomatis dari
+tanggal sistem saat ini.
+x. Nominal transaksi terakhir = setoran awal.
+xi. Disimpan data nasabah berupa nomor rekening, pin, NIK, nama, jenis
+rekening, saldo, tanggal pendaftaran, tanggal transaksi terakhir, dan nominal
+transaksi terakhir.
+
+2. Login Nasabah
+Nasabah login dengan menggunakan nomor rekening dan pin.
+a. Setor tunai
+i. Input jumlah setoran.
+ii. Jumlah setoran harus positif, kelipatan 100, maksimum per transaksi 10.000
+untuk Silver, 20.000 untuk Gold, dan 50.000 untuk Platinum.
+iii. Saldo untuk rekening tersebut bertambah sesuai jumlah setoran.
+iv. Tanggal transaksi terakhir berubah, diambil otomatis dari tanggal sistem
+saat ini.
+v. Nominal transaksi terakhir = jumlah setoran.
+
+3. Login Manager
+Asumsi hanya ada satu akun untuk login Manager.
+a. Menampilkan satu data nasabah tertentu berdasarkan nomor rekening.
+b. Menampilkan jumlah dan data seluruh nasabah secara terurut berdasarkan nomor
+rekening.
+c. Menampilkan jumlah dan data semua nasabah yang tidak melakukan transaksi lebih
+dari 8 bulan, secara terurut berdasarkan tanggal transaksi terakhir.
+d. Menampilkan jumlah dan data nasabah per jenis rekening secara terurut
+berdasarkan nomor rekening
+
+5. Menampilkan buku yang jumlah stok-nya 7-9 buah dan diurutkan mulai dari stok
+tertinggi ke terendah.
+
+6. Mengubah semua buku yang memiliki nama penerbit yang sama. Contoh: semula
+nama penerbitnya “X”, diubah menjadi “Y”. Tampilkan di layar bahwa nama penerbit
+setelah diubah.
